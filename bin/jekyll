@@ -123,3 +123,13 @@ command :import do |c|
     Jekyll::Commands::Import.process(args.first, options)
   end
 end
+
+command :production do |c|
+  c.syntax = 'jekyll production'
+  c.description = 'Build your site for production'
+
+  c.action do |args, options|
+    options = Jekyll.configuration({})
+    Jekyll::Commands::Build.build_all_locales(options)
+  end
+end

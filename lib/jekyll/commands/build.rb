@@ -8,6 +8,52 @@ module Jekyll
         self.watch(site, options) if options['watch']
       end
 
+      def self.build_all_locales(options)
+        site = Jekyll::Site.new(options)
+        locales = self.get_locales
+
+        unless locales
+          puts "You did not create .yml files in the _locales folder"
+          puts "Please create files like this: de.yml"
+          return
+        end
+        @export_path = "_production"
+        return unless self.create_production_dir
+        locales.each do |locale|
+          options["locale"] = locale
+          self.build(site, options)
+          new_path = @export_path + "/" + locale
+          FileUtils.cp_r "_site", "#{new_path}"
+        end
+        locales.each do |locale|
+          new_path = @export_path + "/" + locale
+          puts "Exported #{locale} to: #{new_path}"
+        end
+      end
+
+      def self.create_production_dir
+        begin
+          # remove old production dir.
+          FileUtils.rm_rf "./#{@export_path}"
+          FileUtils.mkdir "./#{@export_path}"
+        rescue
+          nil
+        end
+      end
+
+      # Check the available locales as an array.
+      #
+      # Returns an array of locales ["en", "de"]
+      def self.get_locales
+        # returns ["de.yml", "./_locales/en.yml"]
+        begin
+          locales = Dir.glob(File.join("./_locales/", "*"))
+          locales.map{|locale| locale.split(".yml")[0].split("/")[-1] }
+        rescue
+          nil
+        end
+      end
+
       # Private: Build the site from source into destination.
       #
       # site - A Jekyll::Site instance
