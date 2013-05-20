@@ -128,10 +128,11 @@ end
 
 command :production do |c|
   c.syntax = 'jekyll production'
-  c.description = 'Build your site for production'
+  c.description = 'Minifies and builds all your locales'
 
   c.action do |args, options|
-    options = Jekyll.configuration({})
+    options = normalize_options(options.__hash__)
+    options = Jekyll.configuration(options)
     Jekyll::Commands::Build.build_all_locales(options)
   end
 end
