@@ -9,6 +9,10 @@ module Jekyll
         self.watch(site, options) if options['watch']
       end
 
+      # For this to work, create a folder _locales in your jekyll root.
+      # Create a "#{locale}.yml" file for each locale.
+      # Make sure you have the translate view helper installed.
+      # TODO open source the translate view helper
       def self.build_all_locales(options)
         site = Jekyll::Site.new(options)
         @export_path = "_production"
