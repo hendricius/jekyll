@@ -11,15 +11,17 @@ module Jekyll
 
       def self.build_all_locales(options)
         site = Jekyll::Site.new(options)
+        @export_path = "_production"
+
+        return unless self.create_production_dir
+
         locales = self.get_locales
 
+        # There are no locales, only minify the current install.
         unless locales
-          puts "You did not create .yml files in the _locales folder"
-          puts "Please create files like this: de.yml"
+          self.minify_current(site, options)
           return
         end
-        @export_path = "_production"
-        return unless self.create_production_dir
 
         locales.each do |locale|
           site.config["locale"] = locale
@@ -27,10 +29,17 @@ module Jekyll
           new_path = @export_path + "/" + locale
           FileUtils.cp_r "_site", "#{new_path}"
         end
+
         locales.each do |locale|
           new_path = @export_path + "/" + locale
           puts "Exported #{locale} to: #{new_path}"
         end
+      end
+
+      def self.minify_current(site, options)
+          return if !self.minify(site, options)
+          new_path = @export_path + "/" + "minified"
+          FileUtils.cp_r "_site", "#{new_path}"
       end
 
       def self.create_production_dir
