@@ -126,9 +126,9 @@ command :import do |c|
   end
 end
 
-command :production do |c|
-  c.syntax = 'jekyll production'
-  c.description = 'Minifies and builds all your locales'
+command :minify do |c|
+  c.syntax = 'jekyll minify'
+  c.description = 'minifies your jekyll installation. If you have locales, minify all locales.'
 
   c.action do |args, options|
     options = normalize_options(options.__hash__)
