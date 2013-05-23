@@ -122,10 +122,11 @@ module Jekyll
       payload["pygments_prefix"] = converter.pygments_prefix
       payload["pygments_suffix"] = converter.pygments_suffix
 
+      self.transform
+
       self.content = self.render_liquid(self.content,
                                         payload.merge({:file => self.name}),
                                         info)
-      self.transform
 
       # output keeps track of what will finally be written
       self.output = self.content
