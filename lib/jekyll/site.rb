@@ -5,7 +5,7 @@ module Jekyll
     attr_accessor :config, :layouts, :posts, :pages, :static_files,
                   :categories, :exclude, :include, :source, :dest, :lsi, :pygments,
                   :permalink_style, :tags, :time, :future, :safe, :plugins, :limit_posts,
-                  :show_drafts, :keep_files, :baseurl, :lang
+                  :show_drafts, :keep_files, :baseurl, :locale
 
     attr_accessor :converters, :generators
 
@@ -29,9 +29,9 @@ module Jekyll
       self.show_drafts     = config['show_drafts']
       self.limit_posts     = config['limit_posts']
       self.keep_files      = config['keep_files']
-      self.lang            = config['lang'] || ENV['JLANG']
+      self.locale          = config['locale'] || ENV['JLOCALE']
       # Make available in site
-      self.config["lang"]  = self.lang
+      self.config["locale"]  = self.locale
 
       self.reset
       self.setup
