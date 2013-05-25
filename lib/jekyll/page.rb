@@ -37,7 +37,23 @@ module Jekyll
     #
     # Returns the String permalink or nil if none has been set.
     def permalink
+      path_defined = router_permalink
+      return path_defined if path_defined
       self.data && self.data['permalink']
+    end
+
+    # Attempts to extract a path from the config file if the page
+    # permalink contains 'path'
+    #
+    # setup the paths in your config like this:
+    # my_custom_path: "mypath.html
+    # my_other_path: "other-path/other-path.html
+    #
+    # Returns the permalink, or nil if none found
+    def router_permalink
+      return unless self.data && self.data['permalink']
+      return unless self.data['permalink'].include?('path')
+      @site.config[self.data['permalink']]
     end
 
     # The template of the permalink.
