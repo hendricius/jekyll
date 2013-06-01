@@ -5,7 +5,7 @@ module Jekyll
     attr_accessor :config, :layouts, :posts, :pages, :static_files,
                   :categories, :exclude, :include, :source, :dest, :lsi, :pygments,
                   :permalink_style, :tags, :time, :future, :safe, :plugins, :limit_posts,
-                  :show_drafts, :keep_files, :baseurl, :locale
+                  :show_drafts, :keep_files, :baseurl, :locale, :translations
 
     attr_accessor :converters, :generators
 
@@ -30,8 +30,6 @@ module Jekyll
       self.limit_posts     = config['limit_posts']
       self.keep_files      = config['keep_files']
       self.locale          = config['locale'] || ENV['JLOCALE']
-      # Make available in site
-      self.config["locale"]  = self.locale
 
       self.reset
       self.setup
@@ -89,6 +87,12 @@ module Jekyll
             end
         end
       end
+
+      # Make the locale available in the config.
+      self.config["locale"]  = self.locale
+
+      # Load the language files
+      self.translations = load_language_files
 
       self.converters = instantiate_subclasses(Jekyll::Converter)
       self.generators = instantiate_subclasses(Jekyll::Generator)
@@ -431,6 +435,58 @@ module Jekyll
                                             " for more info."
         $stderr.print Jekyll.logger.formatted_topic("") + "..." # for "done."
         @deprecated_relative_permalinks = true
+      end
+    end
+
+    # Translate keys for given locales
+    #
+    # translation_key - The key would would like to translate
+    # page - The page where the key is located
+    #
+    # Returns the translated key
+    def translate(translation_key, page)
+      translation = translate_attribute(translation_key, page) || @translations[translation_key]
+      missing_translation(translation_key, page) unless translation
+      translation || translation_key
+    end
+
+    def translate_attribute(key, page)
+      return unless key.include?("page")
+      # Typically it should be page.title
+      page_attribute = key.split(".")[-1]
+      return unless page_attribute
+      translation_key = page[page_attribute]
+      return unless translation_key
+      translate(translation_key, page)
+    end
+
+    def missing_translation(translation_key, page)
+      puts "# Please translate: #{page["url"]} - #{translation_key}"
+    end
+
+    # Load the language files. Make sure you created a _locales folder in your
+    # site directory for this to work. Set the locale via ENV["JLOCALE"]. In
+    # the locale folder, create .yml files holding the translation keys.
+    #
+    # Returns the translations
+    def load_language_files
+      return if !locale || locale.empty?
+      folder_path = self.config["source"] + "/_locales/#{locale}/"
+      begin
+        file_paths = Dir.glob(File.join(folder_path, "*"))
+        return if file_paths.empty?
+        combined_language_files = {}
+        file_paths.each do |file|
+          # if file has no content, YAML returns nil.
+          # use an empty hash instead so the merge function works.
+          loaded_file = YAML.load_file(file) || {}
+          combined_language_files = combined_language_files.merge loaded_file
+        end
+        combined_language_files
+      rescue
+        raise "please make sure that you: Created the _locales/#{locale}/ folder
+          in your root jekyll folder && Properly created the language file for #{locale}.
+          Caught "
       end
     end
   end
