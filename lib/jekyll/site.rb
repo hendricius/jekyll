@@ -91,9 +91,6 @@ module Jekyll
       # Make the locale available in the config.
       self.config["locale"]  = self.locale
 
-      # Load the language files
-      self.translations = load_language_files
-
       self.converters = instantiate_subclasses(Jekyll::Converter)
       self.generators = instantiate_subclasses(Jekyll::Generator)
     end
@@ -221,6 +218,10 @@ module Jekyll
     #
     # Returns nothing.
     def generate
+
+      # Load && set the language files
+      self.translations = load_language_files
+
       self.generators.each do |generator|
         generator.generate(self)
       end
