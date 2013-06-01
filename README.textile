@@ -7,6 +7,17 @@ By Tom Preston-Werner, Nick Quaranto, and many awesome contributors!
 
 Jekyll is a simple, blog aware, static site generator. It takes a template directory (representing the raw form of a website), runs it through Textile or Markdown and Liquid converters, and spits out a complete, static website suitable for serving with Apache or your favorite web server. This is also the engine behind "GitHub Pages":http://pages.github.com, which you can use to host your project's page or blog right here from GitHub.
 
+h2. Changes in this fork
+* Easily translate your jekyll pages.
+* use {% t key_name %} in your views.
+* Set the language via ENV["JLOCALE"]
+* Create a directory in your jekyll root:
+* mkdir _locales/
+* Create a dir for your locale:
+* mkdir _locales/en/
+* Create the .yml keys:
+* touch _locales/en/translations.yml
+
 h2. Getting Started
 
 * "Install":http://jekyllrb.com/docs/installation/ the gem
