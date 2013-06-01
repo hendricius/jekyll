@@ -11,8 +11,13 @@
   * Exit with a non-zero exit code when dealing with a Liquid error (#1121)
   * Make the `exclude` and `include` options backwards compatible with
     versions of Jekyll prior to 1.0 (#1114)
+  * Fix pagination on Windows (#1063)
+  * Fix the application of Pygments' Generic Output style to Go code
+    (#1156)
 
 ### Site Enhancements
+  * Add note to Upgrading page about new config options in 1.0.x (#1146)
+  * Documentation for `date_to_rfc822` and `uri_escape` (#1142)
   * Documentation highlight boxes shouldn't show scrollbars if not necessary (#1123)
   * Add link to jekyll-minibundle in the doc's plugins list (#1035)
   * Quick patch for importers documentation
@@ -24,8 +29,13 @@
   * Add docs for gist tag (#1072)
   * Add docs indicating that Pygments does not need to be installed
     separately (#1099, #1119)
+  * Update the migrator docs to be current (#1136)
+  * Add the Jekyll Gallery Plugin to the plugin list (#1143)
 
 ### Development Fixes
+  * Use Jekyll.logger instead of Jekyll::Stevenson to log things (#1149)
+  * Fix pesky Cucumber infinite loop (#1139)
+  * Do not write posts with timezones in Cucumber tests (#1124)
 
 ## 1.0.2 / 2013-05-12
 
