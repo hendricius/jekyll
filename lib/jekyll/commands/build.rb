@@ -75,8 +75,11 @@ module Jekyll
       # TODO this is still hacky.
       def self.minify(site, options, locale)
 
-        # 1. generate application once to have assets in proper location
+        # 0. Set the locale for the site
+        site.config["locale"] = locale
         site.locale = locale
+
+        # 1. generate application once to have assets in proper location
         self.build(site, options)
 
         # 2. Create temp directory
