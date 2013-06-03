@@ -14,7 +14,9 @@ module Jekyll
       # Make sure you have the translate view helper installed.
       # TODO open source the translate view helper
       def self.build_all_locales(options)
+
         site = Jekyll::Site.new(options)
+
         @export_path = "_production"
 
         return unless self.create_production_dir
@@ -28,8 +30,7 @@ module Jekyll
         end
 
         locales.each do |locale|
-          site.config["locale"] = locale
-          return if !self.minify(site, options)
+          return if !self.minify(site, options, locale)
           new_path = @export_path + "/" + locale
           FileUtils.cp_r "_site", "#{new_path}"
         end
@@ -72,9 +73,10 @@ module Jekyll
       # Minify all the assets for the jekyll installation.
       # Make sure the _config.yml is properly set up
       # TODO this is still hacky.
-      def self.minify(site, options)
+      def self.minify(site, options, locale)
 
         # 1. generate application once to have assets in proper location
+        site.locale = locale
         self.build(site, options)
 
         # 2. Create temp directory
